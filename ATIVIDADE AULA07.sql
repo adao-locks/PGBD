@@ -1,288 +1,301 @@
 #1
-SELECT 
-	BC.IDTB_BANCO AS 'ID BANCO',
-    	BC.NOMEBANCO AS 'NOME DO BANCO',
-   	AG.IDTB_AGENCIA AS 'ID AGENCIA',
-	AG.NOMEAGENCIA AS 'NOME DA AGENCIA'
+SELECT BC.IDTB_BANCO AS 'ID BANCO',
+       BC.NOMEBANCO AS 'NOME DO BANCO',
+       AG.IDTB_AGENCIA AS 'ID AGENCIA',
+       AG.NOMEAGENCIA AS 'NOME DA AGENCIA'
 FROM TB_AGENCIA AS AG
-INNER JOIN TB_BANCO AS BC
-ON BC.IDTB_BANCO = AG.FKIDTB_BANCO;
+INNER JOIN TB_BANCO AS BC ON BC.IDTB_BANCO = AG.FKIDTB_BANCO;
 
 #2
-SELECT 
-	BC.NOMEBANCO AS 'NOME DO BANCO',
-    	COUNT(AG.IDTB_AGENCIA) AS 'QUANTIDADE DE AGÊNCIA'
+SELECT BC.NOMEBANCO AS 'NOME DO BANCO',
+       COUNT(AG.IDTB_AGENCIA) AS 'QUANTIDADE DE AGÊNCIA'
 FROM TB_BANCO AS BC
-INNER JOIN TB_AGENCIA AS AG
-ON BC.IDTB_BANCO = AG.FKIDTB_BANCO
+INNER JOIN TB_AGENCIA AS AG ON BC.IDTB_BANCO = AG.FKIDTB_BANCO
 GROUP BY BC.NOMEBANCO
 HAVING COUNT(AG.IDTB_AGENCIA) > 3;
 
 #3
-SELECT
-	BC.NOMEBANCO AS 'NOME DO BANCO',
-    	AG.NOMEAGENCIA AS 'NOME DA AGÊNCIA',
-    	AG.IDTB_AGENCIA AS 'CÓDIGO DA AGÊNCIA'
+SELECT BC.NOMEBANCO AS 'NOME DO BANCO',
+       AG.NOMEAGENCIA AS 'NOME DA AGÊNCIA',
+       AG.IDTB_AGENCIA AS 'CÓDIGO DA AGÊNCIA'
 FROM TB_AGENCIA AS AG
-INNER JOIN TB_BANCO AS BC
-ON AG.FKIDTB_BANCO = BC.IDTB_BANCO
-WHERE (AG.NOMEAGENCIA = 'CENTRO' 
-	OR AG.NOMEAGENCIA = 'JUSTIÇA DO TRABALHO')
-    AND (BC.NOMEBANCO = 'BANCO DO BRASIL' OR NOMEBANCO = 'BRADESCO')
+INNER JOIN TB_BANCO AS BC ON AG.FKIDTB_BANCO = BC.IDTB_BANCO
+WHERE (AG.NOMEAGENCIA = 'CENTRO'
+       OR AG.NOMEAGENCIA = 'JUSTIÇA DO TRABALHO')
+  AND (BC.NOMEBANCO = 'BANCO DO BRASIL'
+       OR NOMEBANCO = 'BRADESCO')
 ORDER BY BC.NOMEBANCO ASC;
 
 #4
-SELECT
-	BC.IDTB_BANCO AS 'CÓDIGO DO BANCO',
-    	BC.NOMEBANCO AS 'NOME DO BANCO',
-    	COUNT(AG.IDTB_AGENCIA) AS 'QUANTIDADE DE AGÊNCIA'
+SELECT BC.IDTB_BANCO AS 'CÓDIGO DO BANCO',
+       BC.NOMEBANCO AS 'NOME DO BANCO',
+       COUNT(AG.IDTB_AGENCIA) AS 'QUANTIDADE DE AGÊNCIA'
 FROM TB_BANCO AS BC
-INNER JOIN TB_AGENCIA AS AG
-ON BC.IDTB_BANCO = AG.FKIDTB_BANCO
+INNER JOIN TB_AGENCIA AS AG ON BC.IDTB_BANCO = AG.FKIDTB_BANCO
 GROUP BY 1
-ORDER BY 3 DESC, 1;
+ORDER BY 3 DESC,
+         1;
 
 #5
-SELECT
-	CONCAT(NOMECLIENTE, SOBRENOMECLIENTE) AS NOME,
-    	NUMEROCONTA AS 'NÚMERO DA CONTA'
+SELECT CONCAT(NOMECLIENTE, SOBRENOMECLIENTE) AS NOME,
+       NUMEROCONTA AS 'NÚMERO DA CONTA'
 FROM TB_CLIENTE
-INNER JOIN TB_CONTA
-ON IDTB_CLIENTE = FKIDTB_CLIENTE
+INNER JOIN TB_CONTA ON IDTB_CLIENTE = FKIDTB_CLIENTE
 GROUP BY 1
 HAVING COUNT(IDTB_CONTA) = 1;
 
 #6
-SELECT
-	NOMEBANCO,
-    	NOMEAGENCIA,
-    	NUMEROCONTA,
-    	CONCAT(NOMECLIENTE, SOBRENOMECLIENTE) AS NOME
+SELECT NOMEBANCO,
+       NOMEAGENCIA,
+       NUMEROCONTA,
+       CONCAT(NOMECLIENTE, SOBRENOMECLIENTE) AS NOME
 FROM TB_CLIENTE
 INNER JOIN TB_CONTA ON IDTB_CLIENTE = FKIDTB_CLIENTE
 INNER JOIN TB_AGENCIA ON IDTB_AGENCIA = FKIDTB_AGENCIA
 INNER JOIN TB_BANCO ON IDTB_BANCO = FKIDTB_BANCO;
 
 #7
-SELECT
-	NOMEAGENCIA 'AGÊNCIA',
-    	COUNT(IDTB_CONTA) 'QUANTIDADE DE CONTAS'
+SELECT NOMEAGENCIA 'AGÊNCIA',
+                   COUNT(IDTB_CONTA) 'QUANTIDADE DE CONTAS'
 FROM TB_AGENCIA
 INNER JOIN TB_CONTA ON IDTB_AGENCIA = FKIDTB_AGENCIA
 GROUP BY 1
 HAVING COUNT(IDTB_CONTA) > 2;
 
 #8
-SELECT
-	NUMEROCONTA CONTA,
-	CONCAT(NOMECLIENTE, ' ', SOBRENOMECLIENTE) AS CLIENTE,
-    	TIMESTAMPDIFF(YEAR, DTNASCIMENTO, CURDATE()) AS IDADE
+SELECT NUMEROCONTA CONTA,
+       CONCAT(NOMECLIENTE, ' ', SOBRENOMECLIENTE) AS CLIENTE,
+       TIMESTAMPDIFF(YEAR, DTNASCIMENTO, CURDATE()) AS IDADE
 FROM TB_CLIENTE
 INNER JOIN TB_CONTA ON IDTB_CLIENTE = FKIDTB_CLIENTE
 WHERE TIMESTAMPDIFF(YEAR, DTNASCIMENTO, CURDATE()) >= 35
 ORDER BY 3 DESC;
 
 #9
-SELECT 
-	IDTB_OPERACAO 'Código operação', 
-    	DTOPERACAO 'Data operação', 
-    	VALOROPERACAO 'Valor operação', 
-    	NOMETIPOOPERACAO 'Tipo operação'
-FROM TB_OPERACAO 
-INNER JOIN TB_TIPOOPERACAO 
-ON IDTB_TIPOOPERACAO = FKIDTB_TIPOOPERACAO 
-ORDER BY 3 DESC, 2;
+SELECT IDTB_OPERACAO 'Código operação',
+                     DTOPERACAO 'Data operação',
+                                VALOROPERACAO 'Valor operação',
+                                              NOMETIPOOPERACAO 'Tipo operação'
+FROM TB_OPERACAO
+INNER JOIN TB_TIPOOPERACAO ON IDTB_TIPOOPERACAO = FKIDTB_TIPOOPERACAO
+ORDER BY 3 DESC,
+         2;
 
 #10
-SELECT
-	SUM(VALOROPERACAO) 'Soma do valor total',
-    	NOMETIPOOPERACAO 'Tipo da operação'
+SELECT SUM(VALOROPERACAO) 'Soma do valor total',
+                          NOMETIPOOPERACAO 'Tipo da operação'
 FROM TB_OPERACAO
-INNER JOIN TB_TIPOOPERACAO
-ON IDTB_TIPOOPERACAO = FKIDTB_TIPOOPERACAO
+INNER JOIN TB_TIPOOPERACAO ON IDTB_TIPOOPERACAO = FKIDTB_TIPOOPERACAO
 GROUP BY NOMETIPOOPERACAO;
 
 #11
-SELECT
-	SUM(VALOROPERACAO) 'Soma do valor total',
-    	NOMETIPOOPERACAO 'Tipo da operação'
+SELECT SUM(VALOROPERACAO) 'Soma do valor total',
+                          NOMETIPOOPERACAO 'Tipo da operação'
 FROM TB_OPERACAO
-INNER JOIN TB_TIPOOPERACAO
-ON IDTB_TIPOOPERACAO = FKIDTB_TIPOOPERACAO
+INNER JOIN TB_TIPOOPERACAO ON IDTB_TIPOOPERACAO = FKIDTB_TIPOOPERACAO
 WHERE NOMETIPOOPERACAO = 'Saque';
 
 #12
-SELECT
-	SUM(VALOROPERACAO) 'Soma do valor total',
-   	NOMETIPOOPERACAO 'Tipo da operação',
-    	NUMEROCONTA 'Número da conta',
-    	FKIDTB_AGENCIA 'Número da agência'
+SELECT SUM(VALOROPERACAO) 'Soma do valor total',
+                          NOMETIPOOPERACAO 'Tipo da operação',
+                                           NUMEROCONTA 'Número da conta',
+                                                       FKIDTB_AGENCIA 'Número da agência'
 FROM TB_OPERACAO
-INNER JOIN TB_TIPOOPERACAO
-ON IDTB_TIPOOPERACAO = FKIDTB_TIPOOPERACAO
-INNER JOIN TB_CONTA
-ON IDTB_CONTA = FKIDTB_CONTA
-WHERE NOMETIPOOPERACAO = 'Saque' AND NUMEROCONTA = 13321 AND FKIDTB_AGENCIA = 4;
+INNER JOIN TB_TIPOOPERACAO ON IDTB_TIPOOPERACAO = FKIDTB_TIPOOPERACAO
+INNER JOIN TB_CONTA ON IDTB_CONTA = FKIDTB_CONTA
+WHERE NOMETIPOOPERACAO = 'Saque'
+  AND NUMEROCONTA = 13321
+  AND FKIDTB_AGENCIA = 4;
 
 #13
-SELECT
-	SUM(VALOROPERACAO),
-    	COUNT(IDTB_OPERACAO),
-    	NOMETIPOOPERACAO,
-    	CONCAT(MONTHNAME(DTOPERACAO),'/',YEAR(DTOPERACAO)) 'MÊS/ANO'
+SELECT SUM(VALOROPERACAO),
+       COUNT(IDTB_OPERACAO),
+       NOMETIPOOPERACAO,
+       CONCAT(MONTHNAME(DTOPERACAO), '/', YEAR(DTOPERACAO)) 'MÊS/ANO'
 FROM TB_OPERACAO
-INNER JOIN TB_TIPOOPERACAO
-ON IDTB_TIPOOPERACAO = FKIDTB_TIPOOPERACAO
+INNER JOIN TB_TIPOOPERACAO ON IDTB_TIPOOPERACAO = FKIDTB_TIPOOPERACAO
 WHERE NOMETIPOOPERACAO = 'Saque'
 GROUP BY 4;
 
 #14
-SELECT
-	IDTB_OPERACAO,
-    	DTOPERACAO,
-    	VALOROPERACAO,
-    	NOMETIPOOPERACAO
+SELECT IDTB_OPERACAO,
+       DTOPERACAO,
+       VALOROPERACAO,
+       NOMETIPOOPERACAO
 FROM tb_operacao
-INNER JOIN tb_tipooperacao
-ON IDTB_TIPOOPERACAO = FKIDTB_TIPOOPERACAO
-WHERE ValorOperacao > 200 AND month(DTOPERACAO) = 12
-group by idTB_OPERACAO, YEAR(DTOPERACAO);
+INNER JOIN tb_tipooperacao ON IDTB_TIPOOPERACAO = FKIDTB_TIPOOPERACAO
+WHERE ValorOperacao > 200
+  AND month(DTOPERACAO) = 12
+GROUP BY idTB_OPERACAO,
+         YEAR(DTOPERACAO);
 
 #15
-SELECT
-	COUNT(IDTB_OPERACAO),
-    	SUM(VALOROPERACAO),
-    	AVG(VALOROPERACAO),
-    	NOMETIPOOPERACAO,
-    	concat(MONTHNAME(DTOPERACAO),'/',YEAR(DTOPERACAO)) 'MÊS/ANO'
+SELECT COUNT(IDTB_OPERACAO),
+       SUM(VALOROPERACAO),
+       AVG(VALOROPERACAO),
+       NOMETIPOOPERACAO,
+       concat(MONTHNAME(DTOPERACAO), '/', YEAR(DTOPERACAO)) 'MÊS/ANO'
 FROM TB_OPERACAO
-INNER JOIN tb_tipooperacao
-ON IDTB_TIPOOPERACAO = FKIDTB_TIPOOPERACAO
+INNER JOIN tb_tipooperacao ON IDTB_TIPOOPERACAO = FKIDTB_TIPOOPERACAO
 WHERE NOMETIPOOPERACAO = 'Depósito'
-group by 5;
+GROUP BY 5;
 
 #16
-SELECT
-	IDTB_OPERACAO,
-    	DTOPERACAO,
-   	VALOROPERACAO,
-    	NOMETIPOOPERACAO
+SELECT IDTB_OPERACAO,
+       DTOPERACAO,
+       VALOROPERACAO,
+       NOMETIPOOPERACAO
 FROM tb_operacao
-INNER JOIN tb_tipooperacao
-ON IDTB_TIPOOPERACAO = FKIDTB_TIPOOPERACAO
-WHERE NomeTipoOperacao = 'Depósito' 
-and ValorOperacao = (
-	SELECT 
-		MAX(ValorOperacao) 
-	FROM TB_OPERACAO 
-    	INNER JOIN tb_tipooperacao
-	ON IDTB_TIPOOPERACAO = FKIDTB_TIPOOPERACAO
-    	WHERE NomeTipoOperacao = 'Depósito');
-    
+INNER JOIN tb_tipooperacao ON IDTB_TIPOOPERACAO = FKIDTB_TIPOOPERACAO
+WHERE NomeTipoOperacao = 'Depósito'
+  AND ValorOperacao =
+    (SELECT MAX(ValorOperacao)
+     FROM TB_OPERACAO
+     INNER JOIN tb_tipooperacao ON IDTB_TIPOOPERACAO = FKIDTB_TIPOOPERACAO
+     WHERE NomeTipoOperacao = 'Depósito');
 
 #17
-SELECT
-	round(AVG(VALOROPERACAO),2),
-	NOMETIPOOPERACAO,
-    	DTOPERACAO
+SELECT round(AVG(VALOROPERACAO), 2),
+       NOMETIPOOPERACAO,
+       DTOPERACAO
 FROM TB_OPERACAO
-INNER JOIN tb_tipooperacao
-ON IDTB_TIPOOPERACAO = FKIDTB_TIPOOPERACAO
+INNER JOIN tb_tipooperacao ON IDTB_TIPOOPERACAO = FKIDTB_TIPOOPERACAO
 WHERE NomeTipoOperacao = 'Depósito'
-	AND day(DTOPERACAO) between 5 AND 15
-group by concat(MONTH(DTOPERACAO),'/',YEAR(DTOPERACAO));
+  AND day(DTOPERACAO) BETWEEN 5 AND 15
+GROUP BY concat(MONTH(DTOPERACAO), '/', YEAR(DTOPERACAO));
 
 #18
-SELECT 
-	IDTB_OPERACAO,
-	DTOPERACAO,
-    	VALOROPERACAO,
-    	NOMETIPOOPERACAO,
-    	NUMEROCONTA,
-    	FKIDTB_AGENCIA
+SELECT IDTB_OPERACAO,
+       DTOPERACAO,
+       VALOROPERACAO,
+       NOMETIPOOPERACAO,
+       NUMEROCONTA,
+       FKIDTB_AGENCIA
 FROM TB_OPERACAO
-INNER JOIN tb_tipooperacao
-ON idTB_TIPOOPERACAO = FKIDTB_TIPOOPERACAO
-INNER JOIN TB_CONTA
-ON IDTB_CONTA = FKIDTB_CONTA
-WHERE NUMEROCONTA = 13321 
-	AND FKIDTB_AGENCIA = 4 
-	AND NomeTipoOperacao = 'Depósito' 
-	AND VALOROPERACAO = (
-		SELECT
-			MAX(VALOROPERACAO)
-		FROM TB_OPERACAO
-		INNER JOIN TB_TIPOOPERACAO
-		ON idTB_TIPOOPERACAO = FKidTB_TIPOOPERACAO
-		INNER JOIN TB_CONTA
-		ON IDTB_CONTA = FKIDTB_CONTA
-		WHERE NUMEROCONTA = 13321
-			AND FKIDTB_AGENCIA = 4
-            		AND NOMETIPOOPERACAO = 'Depósito');
-            
+INNER JOIN tb_tipooperacao ON idTB_TIPOOPERACAO = FKIDTB_TIPOOPERACAO
+INNER JOIN TB_CONTA ON IDTB_CONTA = FKIDTB_CONTA
+WHERE NUMEROCONTA = 13321
+  AND FKIDTB_AGENCIA = 4
+  AND NomeTipoOperacao = 'Depósito'
+  AND VALOROPERACAO =
+    (SELECT MAX(VALOROPERACAO)
+     FROM TB_OPERACAO
+     INNER JOIN TB_TIPOOPERACAO ON idTB_TIPOOPERACAO = FKidTB_TIPOOPERACAO
+     INNER JOIN TB_CONTA ON IDTB_CONTA = FKIDTB_CONTA
+     WHERE NUMEROCONTA = 13321
+       AND FKIDTB_AGENCIA = 4
+       AND NOMETIPOOPERACAO = 'Depósito');
+
 #19
-SELECT
-	ROUND(AVG(VALOROPERACAO),2),
-    	DATE(DTOPERACAO),
-    	NOMETIPOOPERACAO
+SELECT ROUND(AVG(VALOROPERACAO), 2),
+       DATE(DTOPERACAO),
+       NOMETIPOOPERACAO
 FROM TB_OPERACAO
-INNER JOIN TB_TIPOOPERACAO
-ON IDTB_TIPOOPERACAO = FKIDTB_TIPOOPERACAO
+INNER JOIN TB_TIPOOPERACAO ON IDTB_TIPOOPERACAO = FKIDTB_TIPOOPERACAO
 WHERE NOMETIPOOPERACAO = 'Depósito'
-group by date(dtoperacao)
-order by 1 desc;
+GROUP BY date(dtoperacao)
+ORDER BY 1 DESC;
 
 #20
-select
-	concat(nomecliente, ' ', sobrenomecliente),
-    	numeroconta,
-    	idtb_operacao,
-    	dtoperacao,
-    	valoroperacao,
-    	nometipooperacao
-from tb_operacao
-inner join tb_tipooperacao 
-on idTB_TIPOOPERACAO = fkidTB_TIPOOPERACAO
-inner join tb_conta
-on idtb_conta = fkidtb_conta
-inner join tb_cliente
-on idtb_cliente = fkidtb_cliente;
+SELECT concat(nomecliente, ' ', sobrenomecliente),
+       numeroconta,
+       idtb_operacao,
+       dtoperacao,
+       valoroperacao,
+       nometipooperacao
+FROM tb_operacao
+INNER JOIN tb_tipooperacao ON idTB_TIPOOPERACAO = fkidTB_TIPOOPERACAO
+INNER JOIN tb_conta ON idtb_conta = fkidtb_conta
+INNER JOIN tb_cliente ON idtb_cliente = fkidtb_cliente;
 
 #21
-select
-	concat(nomecliente, ' ', sobrenomecliente),
-    	numeroconta,
-    	idtb_operacao,
-    	dtoperacao,
-    	valoroperacao,
-    	nometipooperacao
-from tb_operacao
-inner join tb_tipooperacao 
-on idTB_TIPOOPERACAO = fkidTB_TIPOOPERACAO
-inner join tb_conta
-on idtb_conta = fkidtb_conta
-inner join tb_cliente
-on idtb_cliente = fkidtb_cliente
-where NomeTipoOperacao = 'depósito'
-	and ValorOperacao in (select 
-			distinct(ValorOperacao) 
-       		from tb_operacao
-		inner join tb_tipooperacao 
-		on idTB_TIPOOPERACAO = fkidTB_TIPOOPERACAO
-        	where nometipooperacao = 'Depósito' 
-        	order by 1 desc limit 5)
-order by ValorOperacao desc;
+SELECT concat(nomecliente, ' ', sobrenomecliente),
+       numeroconta,
+       idtb_operacao,
+       dtoperacao,
+       valoroperacao,
+       nometipooperacao
+FROM tb_operacao
+INNER JOIN tb_tipooperacao ON idTB_TIPOOPERACAO = fkidTB_TIPOOPERACAO
+INNER JOIN tb_conta ON idtb_conta = fkidtb_conta
+INNER JOIN tb_cliente ON idtb_cliente = fkidtb_cliente
+WHERE NomeTipoOperacao = 'depósito'
+  AND ValorOperacao in
+    (SELECT distinct(ValorOperacao)
+     FROM tb_operacao
+     INNER JOIN tb_tipooperacao ON idTB_TIPOOPERACAO = fkidTB_TIPOOPERACAO
+     WHERE nometipooperacao = 'Depósito'
+     ORDER BY 1 DESC
+     LIMIT 5)
+ORDER BY ValorOperacao DESC;
 
 #22
-SELECT
-	numeroconta,
-    	nometipooperacao,
-    	round(avg(valoroperacao),2)
-from tb_operacao
-inner join tb_tipooperacao 
-on idTB_TIPOOPERACAO = fkidTB_TIPOOPERACAO
-inner join tb_conta
-on idtb_conta = fkidtb_conta
-where NomeTipoOperacao = 'Depósito'
-group by numeroconta
-having avg(ValorOperacao) >= 500;
+SELECT numeroconta,
+       nometipooperacao,
+       round(avg(valoroperacao), 2)
+FROM tb_operacao
+INNER JOIN tb_tipooperacao ON idTB_TIPOOPERACAO = fkidTB_TIPOOPERACAO
+INNER JOIN tb_conta ON idtb_conta = fkidtb_conta
+WHERE NomeTipoOperacao = 'Depósito'
+GROUP BY numeroconta
+HAVING avg(ValorOperacao) >= 500;
+
+# 23
+
+SELECT nvl(sum(ValorOperacao), 0) -
+  (SELECT nvl(sum(ValorOperacao), 0)
+   FROM tb_operacao
+   INNER JOIN tb_tipooperacao ON idTB_TIPOOPERACAO=FKidTB_TIPOOPERACAO
+   INNER JOIN tb_conta ON idTB_CONTA=FKidTB_CONTA
+   WHERE NomeTipoOperacao='Saque'
+     AND NumeroConta=78787
+     AND FKidTB_AGENCIA=3) 'Saldo da conta'
+FROM tb_operacao
+INNER JOIN tb_tipooperacao ON idTB_TIPOOPERACAO=FKidTB_TIPOOPERACAO
+INNER JOIN tb_conta ON idTB_CONTA=FKidTB_CONTA
+WHERE NomeTipoOperacao='Depósito'
+  AND NumeroConta=78787
+  AND FKidTB_AGENCIA=3;
+
+# 24
+
+SELECT concat(NomeCliente, ' ', SobrenomeCliente) 'Cliente',
+				RGCliente 'RG',
+				DTNascimento 'Data de Nascimento',
+				NomeBanco 'Banco',
+				NomeAgencia 'Agência',
+				NumeroConta 'Conta',
+				idTB_OPERACAO 'Código da operação',
+				DTOperacao 'Data da operação',
+				ValorOperacao 'Valor da operação',
+				NomeTipoOperacao 'Tipo da operação'
+FROM tb_banco
+INNER JOIN tb_agencia ON idTB_BANCO=FKidTB_BANCO
+INNER JOIN tb_conta ON idTB_AGENCIA=FKidTB_AGENCIA
+INNER JOIN tb_cliente ON idTB_CLIENTE=FKidTB_CLIENTE
+INNER JOIN tb_operacao ON idTB_CONTA=FKidTB_CONTA
+INNER JOIN tb_tipooperacao ON idTB_TIPOOPERACAO=FKidTB_TIPOOPERACAO;
+
+# EX questão 24 com view
+
+CREATE VIEW DetalhesDaOperacao AS
+  (SELECT concat(NomeCliente, ' ', SobrenomeCliente) 'Cliente',
+				RGCliente 'RG',
+				DTNascimento 'Data de Nascimento',
+				NomeBanco 'Banco',
+				NomeAgencia 'Agência',
+				NumeroConta 'Conta',
+				idTB_OPERACAO 'Código da operação',
+				DTOperacao 'Data da operação',
+				ValorOperacao 'Valor da operação',
+				NomeTipoOperacao 'Tipo da operação'
+   FROM tb_banco
+   INNER JOIN tb_agencia ON idTB_BANCO=FKidTB_BANCO
+   INNER JOIN tb_conta ON idTB_AGENCIA=FKidTB_AGENCIA
+   INNER JOIN tb_cliente ON idTB_CLIENTE=FKidTB_CLIENTE
+   INNER JOIN tb_operacao ON idTB_CONTA=FKidTB_CONTA
+   INNER JOIN tb_tipooperacao ON idTB_TIPOOPERACAO=FKidTB_TIPOOPERACAO);
+
+SELECT *
+FROM DetalhesDaOperacao;
+
